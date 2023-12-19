@@ -59,12 +59,12 @@ class Product
 
     public function getPrice(): ?int
     {
-        return $this->price;
+        return $this->price / 100;
     }
 
     public function setPrice(int $price): static
     {
-        $this->price = $price;
+        $this->price = 100 * $price;
 
         return $this;
     }

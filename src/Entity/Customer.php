@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Customer
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
