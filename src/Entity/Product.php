@@ -3,12 +3,20 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    description: "Vous pouvez voir ici l'ensemble de nos produits ainsi que leurs détails.",
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ],
+)]
 class Product
 {
     #[ORM\Id]
@@ -22,6 +30,9 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $brand = null;
 
+    /**
+     * The currency is €.
+     */
     #[ORM\Column]
     private ?int $price = null;
 

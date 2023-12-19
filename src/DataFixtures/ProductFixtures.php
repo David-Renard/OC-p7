@@ -92,7 +92,7 @@ class ProductFixtures extends Fixture
             $product->setPrice($price);
             $description = '';
             for ($j=0; $j < $randNbDesc; $j++) {
-                $description = $description.' '.$loremDescription[rand(0, count($loremDescription) - 1)];
+                $description = $description.$loremDescription[rand(0, count($loremDescription) - 1)].' ';
             }
             $product->setDescription($description);
 
