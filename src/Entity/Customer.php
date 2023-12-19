@@ -25,9 +25,9 @@ class Customer
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\ManyToOne(inversedBy: 'customers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $client = null;
+//    #[ORM\ManyToOne(inversedBy: 'customers')]
+//    #[ORM\JoinColumn(nullable: false)]
+//    private ?User $client = null;
 
     public function getId(): ?int
     {
@@ -70,15 +70,15 @@ class Customer
         return $this;
     }
 
-    public function getClient(): ?User
-    {
-        return $this->client;
-    }
-
-    public function setClient(?User $client): static
-    {
-        $this->client = $client;
-
-        return $this;
-    }
+//    public function getClient(): ?User
+//    {
+//        return $this->client;
+//    }
+//
+//    public function setClient(?User $client): static
+//    {
+//        $this->client = $client;
+//
+//        return $this;
+//    }
 }
