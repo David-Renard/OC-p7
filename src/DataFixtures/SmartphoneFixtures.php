@@ -2,11 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Product;
+use App\Entity\Smartphone;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ProductFixtures extends Fixture
+class SmartphoneFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
@@ -80,16 +80,23 @@ class ProductFixtures extends Fixture
             "Praesent vestibulum ligula ac tristique placerat.",
             "Maecenas placerat enim eget ante tincidunt, non luctus libero tempus.",
         ];
+        $processorAsArray = ["MediaTek Dimensity 9300", "Qualcomm Snapdragon 8 Gen 3", "Qualcomm Snapdragon 8+ Gen 2", "Apple A17 Pro", "MediaTek Dimensity 8300", "MediaTek Dimensity 9200+", "Google Tensor G3"];
+        $color = ["Gris", "Blanc", "Bleu", "Noir", "Métal"];
         for ($i=0; $i <20; $i++) {
             $randBrand = rand(0, count($brandAsArray) - 1);
             $randTypo = rand(0, count($typo) - 1);
+            $randColor = rand(0, count($color) - 1);
+            $randProcessor = rand(0, count($processorAsArray) - 1);
             $randNbDesc = rand(1, 7);
 
-            $product = new Product();
+            $product = new Smartphone();
             $product->setName($typo[$randTypo].rand(0, 64));
             $product->setBrand($brandAsArray[$randBrand]);
             $price = rand(9900, 199999) / 100;
             $product->setPrice($price);
+            $product->setColor($color[$randColor]);
+            $product->setProcessor($processorAsArray[$randProcessor]);
+
             $description = '';
             for ($j=0; $j < $randNbDesc; $j++) {
                 $description = $description.$loremDescription[rand(0, count($loremDescription) - 1)].' ';

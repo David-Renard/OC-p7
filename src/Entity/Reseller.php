@@ -2,16 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Repository\ResellerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\Entity(repositoryClass: ResellerRepository::class)]
+#[UniqueEntity(fields: 'email')]
+#[ApiResource(
+    operations: [new Post(),]
+)]
+class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,7 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Customer::class, orphanRemoval: true)]
+    #[ORM\Column(length: 255)]
+    private ?string $companyName = null;
+
+    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'reseller')]
     private Collection $customers;
 
     public function __construct()
@@ -123,6 +132,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getCompanyName(): ?string
+    {
+        return $this->companyName;
+    }
+
+    public function setCompanyName(string $companyName): static
+    {
+        $this->companyName = $companyName;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Customer>
      */
@@ -135,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->customers->contains($customer)) {
             $this->customers->add($customer);
-            $customer->setClient($this);
+            $customer->addReseller($this);
         }
 
         return $this;
@@ -144,10 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCustomer(Customer $customer): static
     {
         if ($this->customers->removeElement($customer)) {
-            // set the owning side to null (unless already changed)
-            if ($customer->getClient() === $this) {
-                $customer->setClient(null);
-            }
+            $customer->removeReseller($this);
         }
 
         return $this;

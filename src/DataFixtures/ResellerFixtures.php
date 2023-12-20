@@ -2,12 +2,12 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\Reseller;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends Fixture
+class ResellerFixtures extends Fixture
 {
 
     public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
@@ -16,45 +16,46 @@ class UserFixtures extends Fixture
     {
         $usersAsArray = [
             [
-                'name'     => "FNAC",
+                'company'  => "FNAC",
                 'email'    => "dev@fnac.com",
                 'password' => "FnEAla!eaM54",
             ],
             [
-                'name'     => "ORANGE",
+                'company'  => "ORANGE",
                 'email'    => "dev@orange.fr",
                 'password' => "QnwXBoHu!q4qGe5",
             ],
             [
-                'name'     => "SFR",
+                'company'  => "SFR",
                 'email'    => "dev@sfr.fr",
                 'password' => "nBHqwS!qDYHg4Ml",
             ],
             [
-                'name'     => "BOULANGER",
+                'company'  => "BOULANGER",
                 'email'    => "dev@boulanger.com",
                 'password' => "451MlqFhgi!d4FfC",
             ],
             [
-                'name'     => "BOUYGUES",
+                'company'  => "BOUYGUES",
                 'email'    => "dev@bouygues.fr",
                 'password' => "nBd419!S25!qqQcv",
             ],
             [
-                'name'     => "FREE",
+                'company'  => "FREE",
                 'email'    => "dev@free.fr",
                 'password' => "NbnhG4965Fu10I!",
             ],
         ];
 
         for ($i = 0 ; $i < count($usersAsArray); $i++) {
-            $user = new User();
-            $user->setName($usersAsArray[$i]['name']);
-            $user->setEmail($usersAsArray[$i]['email']);
-            $user->setPassword($this->passwordHasher->hashPassword($user, $usersAsArray[$i]['password']));
+            $reseller = new Reseller();
+            $reseller->setCompanyName($usersAsArray[$i]['company']);
+            $reseller->setName("Service informatique ".$reseller->getCompanyName());
+            $reseller->setEmail($usersAsArray[$i]['email']);
+            $reseller->setPassword($this->passwordHasher->hashPassword($reseller, $usersAsArray[$i]['password']));
 
-            $this->addReference("user-".$i, $user);
-            $manager->persist($user);
+            $this->addReference("reseller-".$i, $reseller);
+            $manager->persist($reseller);
         }
 
         $manager->flush();
