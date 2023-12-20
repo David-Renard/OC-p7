@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
@@ -21,15 +22,28 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le prénom de votre client ne doit pas être vide.")]
+    #[Assert\Length(
+        min: 2,
+        minMessage: "Le prénom de votre client doit avoir au moins { limit } caractères."
+    )]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de votre client ne doit pas être vide.")]
+    #[Assert\Length(
+        min: 2,
+        minMessage: "Le nom de votre client doit avoir au moins { limit } caractères."
+    )]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Veuillez renseigner une adresse mail pour votre client.")]
+    #[Assert\Email(message: "Veuillez renseigner une adresse mail valide pour votre client.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Veuillez renseigner une adresse postale pour votre client.")]
     private ?string $address = null;
 
     #[ORM\Column]
