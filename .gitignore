@@ -11,3 +11,6 @@
 
 /.idea/
 /P7-APIREST_tableau.xlsx
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
