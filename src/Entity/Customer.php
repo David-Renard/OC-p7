@@ -35,7 +35,7 @@ class Customer
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Reseller::class, inversedBy: 'customers')]
+    #[ORM\ManyToMany(targetEntity: Reseller::class, inversedBy: 'customers', cascade: ['persist'])]
     private Collection $reseller;
 
     public function __construct()

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResellerRepository::class)]
 #[UniqueEntity(fields: 'email')]
@@ -42,7 +43,7 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $companyName = null;
 
-    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'reseller')]
+    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
     private Collection $customers;
 
     public function __construct()
