@@ -5,11 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Repository\ProductRepository;
+use App\Repository\SmartphoneRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\Entity(repositoryClass: SmartphoneRepository::class)]
 #[ApiResource(
     description: "Vous pouvez voir ici l'ensemble de nos produits ainsi que leurs détails.",
     operations: [
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(),
     ],
 )]
-class Product
+class Smartphone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,6 +38,12 @@ class Product
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $processor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $color = null;
 
     public function getId(): ?int
     {
@@ -88,6 +94,30 @@ class Product
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getProcessor(): ?string
+    {
+        return $this->processor;
+    }
+
+    public function setProcessor(string $processor): static
+    {
+        $this->processor = $processor;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

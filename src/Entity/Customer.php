@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
 #[ApiResource]
 class Customer
 {
@@ -25,9 +29,21 @@ class Customer
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-//    #[ORM\ManyToOne(inversedBy: 'customers')]
-//    #[ORM\JoinColumn(nullable: false)]
-//    private ?User $client = null;
+    #[ORM\Column(length: 255)]
+    private ?string $address = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToMany(targetEntity: Reseller::class, inversedBy: 'customers')]
+    private Collection $reseller;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+
+        $this->reseller = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,15 +86,51 @@ class Customer
         return $this;
     }
 
-//    public function getClient(): ?User
-//    {
-//        return $this->client;
-//    }
-//
-//    public function setClient(?User $client): static
-//    {
-//        $this->client = $client;
-//
-//        return $this;
-//    }
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reseller>
+     */
+    public function getReseller(): Collection
+    {
+        return $this->reseller;
+    }
+
+    public function addReseller(Reseller $reseller): static
+    {
+        if (!$this->reseller->contains($reseller)) {
+            $this->reseller->add($reseller);
+        }
+
+        return $this;
+    }
+
+    public function removeReseller(Reseller $reseller): static
+    {
+        $this->reseller->removeElement($reseller);
+
+        return $this;
+    }
 }
