@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
+//use ApiPlatform\Metadata\ApiResource;
+//use ApiPlatform\Metadata\Post;
 use App\Repository\ResellerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,12 +17,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResellerRepository::class)]
 #[UniqueEntity(fields: 'email')]
-#[ApiResource(
-    operations: [new Post(),],
-    denormalizationContext: [
-        'groups' => ['reseller:write'],
-    ]
-)]
+//#[ApiResource(
+//    operations: [new Post(),],
+//    denormalizationContext: [
+//        'groups' => ['reseller:write'],
+//    ]
+//)]
 class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -31,9 +31,9 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\Email(message: "Ceci n'est pas une adresse mail valide.")]
-    #[Assert\NotBlank]
-    #[Groups(['reseller:write'])]
+//    #[Assert\Email(message: "Ceci n'est pas une adresse mail valide.")]
+//    #[Assert\NotBlank]
+//    #[Groups(['reseller:write'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -45,36 +45,36 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\NotBlank(message: "Veuillez saisir un mot de passe.")]
-    #[Assert\Length(
-        min: 6,
-        max: 50,
-        minMessage: "Votre mot de passe doit contenir au moins { limit } caractères.",
-        maxMessage: "Votre mot de passe doit contenir au plus { limit } caractères.",
-    )]
-    #[Groups(['reseller:write'])]
-    #[SerializedName('password')]
+//    #[Assert\NotBlank(message: "Veuillez saisir un mot de passe.")]
+//    #[Assert\Length(
+//        min: 6,
+//        max: 50,
+//        minMessage: "Votre mot de passe doit contenir au moins { limit } caractères.",
+//        maxMessage: "Votre mot de passe doit contenir au plus { limit } caractères.",
+//    )]
+//    #[Groups(['reseller:write'])]
+//    #[SerializedName('password')]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['reseller:write'])]
-    #[Assert\NotBlank(message: "Votre nom ne doit pas être vide.")]
-    #[Assert\Length(
-        min: 3,
-        minMessage: "Votre nom doit avoir au moins { limit } caractères."
-    )]
+//    #[Groups(['reseller:write'])]
+//    #[Assert\NotBlank(message: "Votre nom ne doit pas être vide.")]
+//    #[Assert\Length(
+//        min: 3,
+//        minMessage: "Votre nom doit avoir au moins { limit } caractères."
+//    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['reseller:write'])]
-    #[Assert\NotBlank(message: "Le nom de votre société ne doit pas être vide.")]
-    #[Assert\Length(
-        min: 3,
-        minMessage: "Le nom de votre société doit avoir au moins { limit } caractères."
-    )]
+//    #[Groups(['reseller:write'])]
+//    #[Assert\NotBlank(message: "Le nom de votre société ne doit pas être vide.")]
+//    #[Assert\Length(
+//        min: 3,
+//        minMessage: "Le nom de votre société doit avoir au moins { limit } caractères."
+//    )]
     private ?string $companyName = null;
 
-    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
     private Collection $customers;
 
     public function __construct()

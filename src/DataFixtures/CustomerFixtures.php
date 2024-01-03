@@ -50,14 +50,14 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $customer->setEmail($customersAsArray[$element]['email']);
             $customer->setAddress($customersAsArray[$element]['address']);
 
-            for ($i = 0; $i < rand(0, 3); $i++) {
+//            for ($i = 0; $i < rand(0, 3); $i++) {
                 $reseller = $this->getReference("reseller-".rand(0, 5));
 
-                $reseller->addCustomer($customer);
-                $customer->addReseller($reseller);
+//                $reseller->addCustomer($customer);
+                $customer->setReseller($reseller);
                 $manager->persist($customer);
-                $manager->persist($reseller);
-            }
+//                $manager->persist($reseller);
+//            }
         }
         $manager->flush();
     }
