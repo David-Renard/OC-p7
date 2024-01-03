@@ -3,16 +3,29 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Post(denormalizationContext: ['groups' => ['customer:write']]),
+        new GetCollection(normalizationContext: ['groups' => ['customer:read']]),
+        new Get(normalizationContext: ['groups' => ['customer:read']]),
+        new Delete(denormalizationContext: ['groups' => ['customer:write']])
+    ],
+
+)]
 class Customer
 {
 
@@ -27,6 +40,7 @@ class Customer
         min: 2,
         minMessage: "Le prénom de votre client doit avoir au moins { limit } caractères."
     )]
+    #[Groups(['customer:read','customer:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
@@ -35,18 +49,22 @@ class Customer
         min: 2,
         minMessage: "Le nom de votre client doit avoir au moins { limit } caractères."
     )]
+    #[Groups(['customer:read','customer:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Veuillez renseigner une adresse mail pour votre client.")]
     #[Assert\Email(message: "Veuillez renseigner une adresse mail valide pour votre client.")]
+    #[Groups(['customer:read','customer:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Veuillez renseigner une adresse postale pour votre client.")]
+    #[Groups(['customer:read','customer:write'])]
     private ?string $address = null;
 
     #[ORM\Column]
+    #[Groups(['customer:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToMany(targetEntity: Reseller::class, inversedBy: 'customers', cascade: ['persist'])]
