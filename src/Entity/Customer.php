@@ -67,14 +67,12 @@ class Customer
     #[Groups(['customer:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Reseller::class, inversedBy: 'customers', cascade: ['persist'])]
-    private Collection $reseller;
+    #[ORM\ManyToOne(targetEntity: Reseller::class,cascade: ['persist'], inversedBy: 'customers')]
+    private Reseller $reseller;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-
-        $this->reseller = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,26 +140,14 @@ class Customer
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reseller>
-     */
-    public function getReseller(): Collection
+    public function getReseller(): Reseller
     {
         return $this->reseller;
     }
 
-    public function addReseller(Reseller $reseller): static
+    public function setReseller(Reseller $reseller): static
     {
-        if (!$this->reseller->contains($reseller)) {
-            $this->reseller->add($reseller);
-        }
-
-        return $this;
-    }
-
-    public function removeReseller(Reseller $reseller): static
-    {
-        $this->reseller->removeElement($reseller);
+        $this->reseller = $reseller;
 
         return $this;
     }

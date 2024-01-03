@@ -74,7 +74,7 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 //    )]
     private ?string $companyName = null;
 
-    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
     private Collection $customers;
 
     public function __construct()

@@ -7,11 +7,10 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use App\Entity\Customer;
-use App\Entity\Reseller;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class CustomersByResellerExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+readonly class CustomersByResellerExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
 
     public function __construct(private Security $security){}
@@ -34,10 +33,8 @@ class CustomersByResellerExtension implements QueryCollectionExtensionInterface,
         $user = $this->security->getUser();
         if ($user) {
             $query = $queryBuilder->andWhere($rootAlias.'.reseller = :reseller')
+                ->setParameter('reseller', $user);
 
-//            $query = $queryBuilder->andWhere(sprintf('%s.reseller = :reseller', $rootAlias))
-                ->setParameter('reseller', $user->getId());
-//        dump($query);
 //            $queryBuilder->andWhere(sprintf('%s.firstname = :firstname', $rootAlias))
 //                ->setParameter('firstname', 'Loic');
         }
