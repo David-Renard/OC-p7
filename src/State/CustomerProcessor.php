@@ -21,15 +21,9 @@ readonly class CustomerProcessor implements ProcessorInterface
             return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         }
 
-        $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, string $format, array $context): string {
-                return $object->getName();
-            },
-        ];
-
         $reseller = $this->security->getUser();
         $data->setReseller($reseller);
 
-        return $this->persistProcessor->process($data, $operation, $uriVariables, $defaultContext);
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 }

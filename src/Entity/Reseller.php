@@ -18,10 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ResellerRepository::class)]
 #[UniqueEntity(fields: 'email')]
 #[ApiResource(
-    operations: [new Post(),],
-    denormalizationContext: [
-        'groups' => ['reseller:write'],
-    ]
+    operations: [new Post(openapi: false)],
+//    denormalizationContext: [
+//        'groups' => ['reseller:write'],
+//    ]
 )]
 class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 {
