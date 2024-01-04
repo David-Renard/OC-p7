@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-//use ApiPlatform\Metadata\ApiResource;
-//use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\ResellerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,12 +17,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResellerRepository::class)]
 #[UniqueEntity(fields: 'email')]
-//#[ApiResource(
-//    operations: [new Post(),],
-//    denormalizationContext: [
-//        'groups' => ['reseller:write'],
-//    ]
-//)]
+#[ApiResource(
+    operations: [new Post(),],
+    denormalizationContext: [
+        'groups' => ['reseller:write'],
+    ]
+)]
 class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -74,7 +74,7 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 //    )]
     private ?string $companyName = null;
 
-    #[ORM\OneToMany(targetEntity: Customer::class, mappedBy: 'reseller', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'reseller', targetEntity: Customer::class, cascade: ['persist'])]
     private Collection $customers;
 
     public function __construct()
@@ -204,7 +204,7 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->customers->contains($customer)) {
             $this->customers->add($customer);
-            $customer->addReseller($this);
+            $customer->setReseller($this);
         }
 
         return $this;
@@ -213,7 +213,9 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCustomer(Customer $customer): static
     {
         if ($this->customers->removeElement($customer)) {
-            $customer->removeReseller($this);
+            if ($customer->getReseller() === $this) {
+                $customer->setReseller(null);
+            }
         }
 
         return $this;
