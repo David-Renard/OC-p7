@@ -8,8 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\CustomerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\State\CustomerProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -19,13 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
 #[ApiResource(
     operations: [
-        new Post(denormalizationContext: ['groups' => ['customer:write']]),
+        new Post(denormalizationContext: ['groups' => ['customer:write']], processor: CustomerProcessor::class),
         new GetCollection(normalizationContext: ['groups' => ['customer:read']]),
         new Get(normalizationContext: ['groups' => ['customer:read']]),
-        new Delete(denormalizationContext: ['groups' => ['customer:write']])
+        new Delete(denormalizationContext: ['groups' => ['customer:write']], security: "object.owner == reseller")
     ],
-
 )]
+#[Post(processor: CustomerProcessor::class)]
 class Customer
 {
 
@@ -67,7 +66,8 @@ class Customer
     #[Groups(['customer:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(targetEntity: Reseller::class,cascade: ['persist'], inversedBy: 'customers')]
+//    #[Groups(['customer:write'])]
+    #[ORM\ManyToOne(targetEntity: Reseller::class, cascade: ['persist'], inversedBy: 'customers')]
     private Reseller $reseller;
 
     public function __construct()
@@ -145,7 +145,7 @@ class Customer
         return $this->reseller;
     }
 
-    public function setReseller(Reseller $reseller): static
+    public function setReseller(?Reseller $reseller): static
     {
         $this->reseller = $reseller;
 
