@@ -10,11 +10,18 @@ api_platform:
     defaults:
         stateless: true
         cache_headers:
+            max_age: 0
+            shared_max_age: 3600
             vary: ['Content-Type', 'Authorization', 'Origin']
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
     event_listeners_backward_compatibility_layer: false
+    http_cache:
+#        invalidation:
+#            enabled: true
+#            varnish_urls: ['%env(VARNISH_URL)%']
+        public: true
     keep_legacy_inflector: false
     swagger:
         api_keys:
