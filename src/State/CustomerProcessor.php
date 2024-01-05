@@ -5,13 +5,14 @@ namespace App\State;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Exception\UniqueConstraintsViolationException;
+use App\Repository\CustomerRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 
 readonly class CustomerProcessor implements ProcessorInterface
 {
-    public function __construct(private Security $security, private ProcessorInterface $persistProcessor, private ProcessorInterface $removeProcessor)
+    public function __construct(private CustomerRepository $customerRepository, private Security $security, private ProcessorInterface $persistProcessor, private ProcessorInterface $removeProcessor)
     {
     }
 
@@ -22,6 +23,10 @@ readonly class CustomerProcessor implements ProcessorInterface
         }
 
         $reseller = $this->security->getUser();
+        if ($this->customerRepository->findBy(['reseller' => $reseller, 'email' => $data->getEmail()])) {
+            throw new UniqueConstraintsViolationException("Un client avec cette adresse mail existe déjà dans votre portefeuille.");
+        }
+
         $data->setReseller($reseller);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
