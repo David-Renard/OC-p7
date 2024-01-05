@@ -21,10 +21,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(denormalizationContext: ['groups' => ['customer:write']], processor: CustomerProcessor::class),
         new GetCollection(normalizationContext: ['groups' => ['customer:read']]),
         new Get(normalizationContext: ['groups' => ['customer:read']]),
-        new Delete(denormalizationContext: ['groups' => ['customer:write']], security: "object.owner == reseller")
+        new Delete(denormalizationContext: ['groups' => ['customer:write']], security: "object.reseller == user")
     ],
 )]
-#[Post(processor: CustomerProcessor::class)]
 class Customer
 {
 
@@ -66,9 +65,8 @@ class Customer
     #[Groups(['customer:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-//    #[Groups(['customer:write'])]
     #[ORM\ManyToOne(targetEntity: Reseller::class, cascade: ['persist'], inversedBy: 'customers')]
-    private Reseller $reseller;
+    public Reseller $reseller;
 
     public function __construct()
     {
