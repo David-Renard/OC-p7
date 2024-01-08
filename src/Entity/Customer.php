@@ -18,10 +18,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
 #[ApiResource(
     operations: [
-        new Post(denormalizationContext: ['groups' => ['customer:write']], processor: CustomerProcessor::class),
-        new GetCollection(normalizationContext: ['groups' => ['customer:read']]),
-        new Get(normalizationContext: ['groups' => ['customer:read']]),
-        new Delete(denormalizationContext: ['groups' => ['customer:write']], security: "object.reseller == user")
+        new Post(
+            uriTemplate: 'v1/customers/',
+            denormalizationContext: ['groups' => ['customer:write']],
+            processor: CustomerProcessor::class
+        ),
+        new GetCollection(
+            uriTemplate: 'v1/customers/',
+            normalizationContext: ['groups' => ['customer:read']]
+        ),
+        new Get(
+            uriTemplate: 'v1/customers/{id}',
+            normalizationContext: ['groups' => ['customer:read']]
+        ),
+        new Delete(
+            uriTemplate: 'v1/customers/{id}',
+            denormalizationContext: ['groups' => ['customer:write']],
+            security: "object.reseller == user")
     ],
 )]
 class Customer
