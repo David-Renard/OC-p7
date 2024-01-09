@@ -8,33 +8,30 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\CustomerRepository;
-use App\State\CustomerProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as CustomAssert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\UniqueConstraint(fields: ['email', 'reseller'])]
+//#[CustomAssert\IsCustomersExistValidator()]
 #[UniqueEntity(fields: ['email', 'reseller'], message: "Un client avec cette adresse mail existe déjà dans votre portefeuille.")]
 #[ApiResource(
     operations: [
         new Post(
-            uriTemplate: 'v1/customers/',
             denormalizationContext: ['groups' => ['customer:write']],
-            processor: CustomerProcessor::class
         ),
         new GetCollection(
-            uriTemplate: 'v1/customers/',
             normalizationContext: ['groups' => ['customer:read']]
         ),
         new Get(
-            uriTemplate: 'v1/customers/{id}',
             normalizationContext: ['groups' => ['customer:read']]
         ),
         new Delete(
-            uriTemplate: 'v1/customers/{id}',
             denormalizationContext: ['groups' => ['customer:write']],
-            security: "object.reseller == user")
+            security: "is_granted('ROLE_USER') and object.getReseller() == user")
     ],
 )]
 class Customer
@@ -49,7 +46,7 @@ class Customer
     #[Assert\NotBlank(message: "Le prénom de votre client ne doit pas être vide.")]
     #[Assert\Length(
         min: 2,
-        minMessage: "Le prénom de votre client doit avoir au moins { limit } caractères."
+        minMessage: "Le prénom de votre client doit avoir au moins {{ limit }} caractères."
     )]
     #[Groups(['customer:read','customer:write'])]
     private ?string $firstname = null;
@@ -58,7 +55,7 @@ class Customer
     #[Assert\NotBlank(message: "Le nom de votre client ne doit pas être vide.")]
     #[Assert\Length(
         min: 2,
-        minMessage: "Le nom de votre client doit avoir au moins { limit } caractères."
+        minMessage: "Le nom de votre client doit avoir au moins {{ limit }} caractères."
     )]
     #[Groups(['customer:read','customer:write'])]
     private ?string $lastname = null;
@@ -79,7 +76,7 @@ class Customer
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(targetEntity: Reseller::class, cascade: ['persist'], inversedBy: 'customers')]
-    public Reseller $reseller;
+    private Reseller $reseller;
 
     public function __construct()
     {
