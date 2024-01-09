@@ -44,7 +44,9 @@ possible de :
 `DATABASE_URL="postgresql://postgres:root@127.0.0.1:5432/MyApiBileMo?serverVersion=15&charset=utf8"`
 
 __MyApiBileMo__ est le nom de la base de données que vous allez créer pour mettre en place le projet.
+
 4.  Dans le dossier config à la racine du projet, ajouter un nouveau répertoire `jwt`.
+
 5.  Générer une paire de clés pour la ocnfiguration du JWT en tappant :
 
 * `winpty openssl genrsa -out config/jwt/private.pem -aes256 4096`
@@ -57,9 +59,13 @@ publique.
 
 Il vous est une nouvelle fois demandé de saisir la passphrase entrée précédemment.
 De plus inscrivez cette passphrase dans votre fichier .env.local dans la section _lexiq_ pour l'attribut JWT_PASSPHRASE.
+ 
 6.  Créer la base de données en tappant : `symfony console doctrine:database:create`
+ 
 7.  Réaliser les migrations en tappant : `symfony console doctrine:migrations:migrate`
+  
 8.  Charger les fixtures en tappant : `symfony console doctrine:fixtures:load`
+
 9.  Votre projet est maintenant prêt vous pouvez l'utiliser en tappant : `symfony serve -d` et en vous rendant à 
 l'adresse http://127.0.0.1:8000/api/docs
 10.  Voici le code json vous permettant d'accèder à l'api via `login_check` :
