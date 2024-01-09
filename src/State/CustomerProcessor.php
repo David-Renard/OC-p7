@@ -24,7 +24,7 @@ readonly class CustomerProcessor implements ProcessorInterface
 
         $reseller = $this->security->getUser();
         if ($this->customerRepository->findBy(['reseller' => $reseller, 'email' => $data->getEmail()])) {
-            throw new UniqueConstraintsViolationException("Un client avec cette adresse mail existe déjà dans votre portefeuille.");
+            throw new UniqueConstraintsViolationException(400, "Un client avec cette adresse mail existe déjà dans votre portefeuille.");
         }
 
         $data->setReseller($reseller);

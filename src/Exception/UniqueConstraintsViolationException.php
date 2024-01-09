@@ -2,7 +2,9 @@
 
 namespace App\Exception;
 
-class UniqueConstraintsViolationException extends \Exception
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+class UniqueConstraintsViolationException extends HttpException
 {
 
 }
