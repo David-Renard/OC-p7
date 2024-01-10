@@ -12,6 +12,8 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20240103133546 extends AbstractMigration
 {
+
+
     public function getDescription(): string
     {
         return '';
@@ -19,7 +21,7 @@ final class Version20240103133546 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        // This up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE customer_reseller DROP CONSTRAINT fk_34c41bb69395c3f3');
         $this->addSql('ALTER TABLE customer_reseller DROP CONSTRAINT fk_34c41bb691e6a19d');
         $this->addSql('DROP TABLE customer_reseller');
@@ -30,7 +32,7 @@ final class Version20240103133546 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        // This down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('CREATE TABLE customer_reseller (customer_id INT NOT NULL, reseller_id INT NOT NULL, PRIMARY KEY(customer_id, reseller_id))');
         $this->addSql('CREATE INDEX idx_34c41bb691e6a19d ON customer_reseller (reseller_id)');

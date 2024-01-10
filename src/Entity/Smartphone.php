@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     description: "Vous pouvez voir ici l'ensemble de nos produits ainsi que leurs détails.",
     operations: [
-        new Get(),
-        new GetCollection(),
-    ],
+                 new Get(),
+                 new GetCollection(),
+                ],
 )]
 class Smartphone
 {
