@@ -14,16 +14,21 @@ use Symfony\Bundle\SecurityBundle\Security;
 readonly class CustomersByResellerExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
 
-    public function __construct(private Security $security){}
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
+    public function __construct(private Security $security)
     {
-        $this->customersByReseller($resourceClass, $queryBuilder);
     }
 
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation= null, array $context= []): void
     {
         $this->customersByReseller($resourceClass, $queryBuilder);
+
+    }
+
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation= null, array $context= []): void
+    {
+        $this->customersByReseller($resourceClass, $queryBuilder);
+
     }
 
     private function customersByReseller(string $resourceClass, QueryBuilder $queryBuilder): void
@@ -35,5 +40,6 @@ readonly class CustomersByResellerExtension implements QueryCollectionExtensionI
                 ->andWhere("$rootAlias.reseller = :reseller")
                 ->setParameter('reseller', $reseller);
         }
+
     }
 }
