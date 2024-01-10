@@ -17,6 +17,7 @@ final class Version20231219143649 extends AbstractMigration
     public function getDescription(): string
     {
         return '';
+
     }
 
     public function up(Schema $schema): void
@@ -35,6 +36,7 @@ final class Version20231219143649 extends AbstractMigration
         $this->addSql('CREATE TABLE smartphone (id INT NOT NULL, name VARCHAR(255) NOT NULL, brand VARCHAR(255) NOT NULL, price INT NOT NULL, description TEXT DEFAULT NULL, processor VARCHAR(255) NOT NULL, color VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE customer_reseller ADD CONSTRAINT FK_34C41BB69395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE customer_reseller ADD CONSTRAINT FK_34C41BB691E6A19D FOREIGN KEY (reseller_id) REFERENCES reseller (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+
     }
 
     public function down(Schema $schema): void
@@ -50,5 +52,6 @@ final class Version20231219143649 extends AbstractMigration
         $this->addSql('DROP TABLE customer_reseller');
         $this->addSql('DROP TABLE reseller');
         $this->addSql('DROP TABLE smartphone');
+
     }
 }
