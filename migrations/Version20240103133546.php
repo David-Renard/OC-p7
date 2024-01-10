@@ -17,6 +17,7 @@ final class Version20240103133546 extends AbstractMigration
     public function getDescription(): string
     {
         return '';
+
     }
 
     public function up(Schema $schema): void
@@ -28,6 +29,7 @@ final class Version20240103133546 extends AbstractMigration
         $this->addSql('ALTER TABLE customer ADD reseller_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE customer ADD CONSTRAINT FK_81398E0991E6A19D FOREIGN KEY (reseller_id) REFERENCES reseller (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_81398E0991E6A19D ON customer (reseller_id)');
+
     }
 
     public function down(Schema $schema): void
@@ -42,5 +44,6 @@ final class Version20240103133546 extends AbstractMigration
         $this->addSql('ALTER TABLE customer DROP CONSTRAINT FK_81398E0991E6A19D');
         $this->addSql('DROP INDEX IDX_81398E0991E6A19D');
         $this->addSql('ALTER TABLE customer DROP reseller_id');
+
     }
 }
