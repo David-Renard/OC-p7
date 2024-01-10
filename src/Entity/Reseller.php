@@ -11,17 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResellerRepository::class)]
 #[UniqueEntity(fields: 'email')]
 #[ApiResource(
     operations: [new Post(openapi: false)],
-//    denormalizationContext: [
-//        'groups' => ['reseller:write'],
-//    ]
 )]
 class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -31,9 +25,6 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-//    #[Assert\Email(message: "Ceci n'est pas une adresse mail valide.")]
-//    #[Assert\NotBlank]
-//    #[Groups(['reseller:write'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -45,33 +36,12 @@ class Reseller implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-//    #[Assert\NotBlank(message: "Veuillez saisir un mot de passe.")]
-//    #[Assert\Length(
-//        min: 6,
-//        max: 50,
-//        minMessage: "Votre mot de passe doit contenir au moins { limit } caractères.",
-//        maxMessage: "Votre mot de passe doit contenir au plus { limit } caractères.",
-//    )]
-//    #[Groups(['reseller:write'])]
-//    #[SerializedName('password')]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-//    #[Groups(['reseller:write'])]
-//    #[Assert\NotBlank(message: "Votre nom ne doit pas être vide.")]
-//    #[Assert\Length(
-//        min: 3,
-//        minMessage: "Votre nom doit avoir au moins { limit } caractères."
-//    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-//    #[Groups(['reseller:write'])]
-//    #[Assert\NotBlank(message: "Le nom de votre société ne doit pas être vide.")]
-//    #[Assert\Length(
-//        min: 3,
-//        minMessage: "Le nom de votre société doit avoir au moins { limit } caractères."
-//    )]
     private ?string $companyName = null;
 
     #[ORM\OneToMany(mappedBy: 'reseller', targetEntity: Customer::class, cascade: ['persist'])]
